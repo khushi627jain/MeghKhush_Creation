@@ -10,7 +10,7 @@ const date = require('date-and-time');
 router.post("/", authenticate, async function (req, res) {
   let obj = req.body;
   obj.userID = req.userID;
-  console.log(obj);
+
   await Product.create(obj);
   res.send("Successfully added details")
 })
@@ -47,7 +47,8 @@ router.get("/:id", authenticate, async function (req, res, next)
   if (req.query.searchByName) {
     const searchRegex = new RegExp(req.query.searchByName, "i");
     query = query.where("name").regex(searchRegex);
-    // query=query.find({name:{$regex:"req.query.searchByName",$options:"i"}})
+    // query=query.where({name:{$regex:"req.query.searchByName",$options:"i"}})
+  
   }
 
 
@@ -64,21 +65,20 @@ if (req.query.priceRange && Array.isArray(req.query.priceRange)) {
   });
   query = query.or(priceQuery.map(query => ({ price: query })));
  }
-// query=query.find({$or:priceQuery.map((ele)=>({price:ele}))})
+
 
   // Filter by filterByRating
   if (req.query.filterByRating) {
     query = query.where("rating").gte(parseFloat(req.query.filterByRating));
   }
-  // query=query.find({rating:{$gte:parseFloat(req.query.filterByRating)}})
+
 
   // Filter by paymentModes
   if (req.query.paymentModes && Array.isArray(req.query.paymentModes)) {
     const paymentModes = req.query.paymentModes;
     query = query.where("paymentMode").in(paymentModes);
   } 
-  // query=query.find({$or:req.query.paymentModes.map((ele)=>({paymentMode:ele}))})
-
+ 
   // Filter by selectedTags
   if (Array.isArray(req.query.selectedTags)) {
     const selectedTags = req.query.selectedTags;
@@ -87,7 +87,7 @@ if (req.query.priceRange && Array.isArray(req.query.priceRange)) {
   const totalItems = await Product.countDocuments(query);
 
   let obj = await query.skip(startIndex).limit(6);
-  console.log(obj.length);
+
   res.send({ data: obj, totalItems });
 });
 

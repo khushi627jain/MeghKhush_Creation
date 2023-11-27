@@ -22,6 +22,7 @@ if(priceType){
   }
 }
 
+
 if(name){
   query=query.where({
     $or:[
@@ -149,7 +150,7 @@ $or:
 
 
 const totalGifts=await Gift.countDocuments(query);
-console.log(totalGifts)
+
 query=query.skip((page-1)*8).limit(8);
 
 query.exec((err, obj) => {
@@ -265,7 +266,6 @@ res.send("Successfully Deleted")
 GiftRouter.patch("/:id", async function(req, res, next) {
   try {
     const updatedGift = await Gift.updateOne({ _id: req.params.id }, { $set: req.body });
-
     if (updatedGift.nModified === 0) {
       return res.status(404).send("Item not found");
     }

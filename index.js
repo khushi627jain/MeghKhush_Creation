@@ -76,7 +76,7 @@ app.patch("/user/order",authenticate,async function(req,res){
 app.patch("/user/address",authenticate,async function(req,res){
    
     await Users.findByIdAndUpdate(req.userID,{address:req.body})
-    console.log(req.body)
+ 
     res.send("Address Upadted")
 })
  
@@ -120,7 +120,7 @@ app.patch("/user/quantity/:id/:quantity",authenticate,async function(req,res){
 app.listen(process.env.PORT,async function(){
     try{
 await connection;
-console.log(`Running on ${process.env.PORT}`)
+
     }
     catch(err){
         console.log(err);
