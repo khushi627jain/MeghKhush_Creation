@@ -7,13 +7,24 @@ app.use(cors());
 app.use(express.json())
 let bcrypt=require("bcrypt")
 let jwt=require("jsonwebtoken");
-const { Users } = require("./userSchema");
+const { Users } = require("./userSchema");    
 const {GiftRouter}=require("./giftRouter");
 const { authenticate } = require("./middleware");
+let passport=require("./auth")
 
- 
+
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile'] }));
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login',session:false }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+
+
 app.use("/gift",GiftRouter)
-
 
 app.post("/signup",async function(req,res){
 let {email,password}=req.body;
@@ -32,7 +43,6 @@ else{
 }
 })
 
-
 app.post("/login", async function (req, res) {
     let { email, password } = req.body;
     let obj = await Users.findOne({ email });
@@ -49,9 +59,8 @@ app.post("/login", async function (req, res) {
     } else {
       res.status(204).send("Email doesn't exist, Please sign up first"); // 404 Not Found
     }
-  });
+});
   
-
 //for adding any product to wishlist
 app.patch("/user/wishlist",authenticate,async function(req,res){
     await Users.findByIdAndUpdate(req.userID,req.body) 
@@ -126,3 +135,4 @@ await connection;
         console.log(err);
     }
 })
+
