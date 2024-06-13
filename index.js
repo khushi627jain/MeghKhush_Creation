@@ -10,18 +10,9 @@ let jwt=require("jsonwebtoken");
 const { Users } = require("./userSchema");    
 const {GiftRouter}=require("./giftRouter");
 const { authenticate } = require("./middleware");
-let passport=require("./auth")
 
 
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile'] }));
 
-app.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login',session:false }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  });
 
 
 app.use("/gift",GiftRouter)
