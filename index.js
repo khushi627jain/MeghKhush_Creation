@@ -115,7 +115,7 @@ app.patch("/user/quantity/:id/:quantity",authenticate,async function(req,res){
    
     await Users.findByIdAndUpdate(req.userID,{cart:newCartArr,completedOrderArray:newFixedArr})
     res.send("Quantity updated")
-})
+}) 
 
 app.listen(process.env.PORT,async function(){
     try{
